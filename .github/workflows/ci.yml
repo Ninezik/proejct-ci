@@ -1,11 +1,11 @@
-name: CI with uv
+name: CI and Simple CD with uv
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,3 +26,23 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+
+  deliver:
+    needs: ci   # 👈 CD nunggu CI sukses
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate delivery file
+        run: |
+          echo "Build successful!" > build.txt
+          echo "Commit: $GITHUB_SHA" >> build.txt
+          echo "Date: $(date)" >> build.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-result
+          path: build.txt
