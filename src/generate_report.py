@@ -1,17 +1,24 @@
 from pathlib import Path
 import pandas as pd
 
-# pastikan folder ada
+# path input & output
+input_file = Path("data/raw/nilai_siswa.csv")
 output_dir = Path("data/processed")
+output_file = output_dir / "report_nilai.csv"
+
+# pastikan folder processed ada
 output_dir.mkdir(parents=True, exist_ok=True)
 
-# contoh isi report
-df = pd.DataFrame({
-    "nama": ["Ani", "Budi"],
-    "nilai": [80, 90]
-})
+# baca data
+df = pd.read_csv(input_file)
 
-output_file = output_dir / "report_nilai.csv"
+# (opsional) validasi sederhana
+if df.empty:
+    raise ValueError("Data kosong!")
+
+# simpan report
 df.to_csv(output_file, index=False)
 
-print(f"Report berhasil dibuat: {output_file}")
+print("Report berhasil dibuat")
+print(f"Input : {input_file}")
+print(f"Output: {output_file}")
