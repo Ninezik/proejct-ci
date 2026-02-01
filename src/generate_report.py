@@ -1,26 +1,17 @@
-import csv
 from pathlib import Path
+import pandas as pd
 
-input_file = Path("data/raw/nilai_siswa.csv")
+# pastikan folder ada
 output_dir = Path("data/processed")
-output_file = output_dir / "report_nilai.csv"
-
 output_dir.mkdir(parents=True, exist_ok=True)
 
-total = 0
-count = 0
+# contoh isi report
+df = pd.DataFrame({
+    "nama": ["Ani", "Budi"],
+    "nilai": [80, 90]
+})
 
-with input_file.open() as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        total += int(row["nilai"])
-        count += 1
+output_file = output_dir / "report_nilai.csv"
+df.to_csv(output_file, index=False)
 
-rata_rata = total / count
-
-with output_file.open("w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["metrik", "nilai"])
-    writer.writerow(["rata_rata_nilai", rata_rata])
-
-print("Report generated:", output_file)
+print(f"Report berhasil dibuat: {output_file}")
